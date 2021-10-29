@@ -16,22 +16,52 @@ void setup() {
 }
 
 void loop() {
+  //while (on_button == true)
+
+  //int score = 0
+  
   //reset pins after each command
   for (int pin=6; pin<=8; pin++) 
     digitalWrite(pin, LOW);
 
-  //reset actions after each command
-  bool honking, turning, braking = false;
+  //reset after each command
+  bool action_success = false;
 
   //time to perform command
   int timer = 20;
 
-  honking = honk_it(timer);
-  digitalWrite(0, (honking ? HIGH : LOW));
-  turning = turn_it(timer);
-  digitalWrite(1, (turning ? HIGH : LOW));
-  braking = brake_it(timer);
-  digitalWrite(2, (braking ? HIGH : LOW));
+  //choose command
+  //int random = rand() % 3 + 1;
+  int random = 1;
+
+  //turn yellow light on
+
+  switch (random) {
+    case 1;
+      action_success = honk_it(timer);
+      digitalWrite(0, (action_success ? HIGH : LOW));
+      break;
+    case 2;
+      action_success = turn_it(timer);
+      digitalWrite(1, (action_success ? HIGH : LOW));
+      break;
+    case 3;
+      action_success = brake_it(timer);
+      digitalWrite(2, (action_success ? HIGH : LOW));
+      break;
+  }
+
+  //turn yellow light off
+
+  /*if (action_success == true) {
+    green light
+    tell user they succeeded
+    score++
+    timer--
+  } else {
+    red light
+    tell user they failed
+  }*/
 }
 
 bool honk_it(int timer) {
