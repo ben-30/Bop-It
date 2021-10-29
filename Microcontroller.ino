@@ -1,13 +1,15 @@
 void setup() {
   //drive output per command
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   
   //check input per command
   pinMode(9, INPUT);
   pinMode(10, INPUT);
   pinMode(11, INPUT);
+
+  //LED screen
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
 
   //power button, start button
   pinMode(0, INPUT);
@@ -26,10 +28,8 @@ void loop() {
     //if (digitalRead(1) == HIGH) - START
     
     //int score = 0
-    
-    //reset pins after each command
-    for (int pin=6; pin<=8; pin++) 
-      digitalWrite(pin, LOW);
+
+    digitalWrite(8, HIGH);
   
     //reset after each command
     bool action_success = false;
@@ -76,8 +76,6 @@ void loop() {
 }
 
 bool honk_it(int timer) {
-  digitalWrite(8, HIGH);
-
   int count = 0;
   while (count<timer) {
     if (digitalRead(9) == HIGH) 
@@ -90,8 +88,6 @@ bool honk_it(int timer) {
 }
 
 bool turn_it(int timer) {
-  digitalWrite(7, HIGH);
-
   int count = 0;
   while (count<timer) {
     if (digitalRead(10) == HIGH)
@@ -104,8 +100,6 @@ bool turn_it(int timer) {
 }
 
 bool brake_it(int timer) {
-  digitalWrite(6, HIGH);
-
   int count = 0;
   while (count<timer) {
     if (digitalRead(11) == HIGH)
