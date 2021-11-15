@@ -13,8 +13,6 @@ void setup() {
 }
 
 void loop() {
-  //0 turned to left, 1 turned to right
-  //previous_turn = (digitalRead(10) == HIGH ? 1 : 0);
   
   //while (digitalRead(0) == HIGH) - POWER
   
@@ -23,40 +21,53 @@ void loop() {
     //if (digitalRead(1) == HIGH) - START
     
     //int score = 0
-
-    digitalWrite(8, HIGH);
-
   
     //reset after each command
-    bool action_success = false;
+    bool brake_success = false;
+    bool turn_success = false;
+    bool honk_success = false;
+
+    int current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
+    int current_brake = 0;
+    if ( digitalRead(5) == HIGH ) {
+      current_brake = 5;
+    } else if ( digitalRead(6) == HIGH ) {
+      current_brake = 6;
+    }
   
     //time to perform command
     int timer = 20;
   
     //choose command
     //int random = rand() % 3 + 1;
-    int random = 2;
+    int random = 1;
   
     //turn yellow light on
+
+    honk_success = honk_it(timer);
+    turn_success = turn_it(timer, current_turn);
+    brake_success = brake_it(timer, current_brake);
+
+    bool correct = false;
   
-    /*switch (random) {
+    switch (random) {
       case 1:
-        action_success = honk_it(timer);
-        digitalWrite(2, (action_success ? HIGH : LOW));
+        if ( honk_success == true ) { correct = true; }
+        if ( turn_success == true || brake_success == true ) { correct = false; }
         break;
       case 2:
-        action_success = turn_it(timer);
-        digitalWrite(3, (action_success ? HIGH : LOW));
+        if ( turn_success == true ) { correct = true; }
+        if ( honk_success == true || brake_success == true ) { correct = false; }
         break;
       case 3:
-        action_success = brake_it(timer);
-        digitalWrite(4, (action_success ? HIGH : LOW));
+        if ( brake_success == true ) { correct = true; }
+        if ( honk_success == true || turn_success == true ) { correct = false; }
         break;
-    }*/
+    }
   
     //turn yellow light off
   
-    /*if (action_success == true) {
+    /*if (correct == true) {
       green light
       tell user they succeeded
       score++
@@ -108,12 +119,12 @@ bool brake_it(int timer, int previous_brake) {
   int count = 0;
   while (count<timer) {
     switch (previous_brake) {
-      case 12:
-        if (digitalRead(11) == HIGH) {
+      case 6:
+        if (digitalRead(5) == HIGH) {
           return true;
         }
-      case 11:
-        if (digitalRead(12) == HIGH) {
+      case 5:
+        if (digitalRead(6) == HIGH) {
           return true;
         }
     }
