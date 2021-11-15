@@ -1,27 +1,18 @@
 void setup() {
-  //drive output per command
-  pinMode(8, OUTPUT);
+  pinMode(0, INPUT);  //power
+  pinMode(1, INPUT);  //start
+  pinMode(2, OUTPUT); //green
+  pinMode(3, OUTPUT); //yellow
+  pinMode(4, OUTPUT); //red
+  pinMode(5, INPUT);  //hand brake
+  pinMode(6, INPUT);  //hand brake
+  pinMode(7, INPUT);  //potentiometer
+  pinMode(8, INPUT);  //push button
   
-  //check input per command
-  pinMode(9, INPUT);
-  pinMode(10, INPUT);
-  pinMode(11, INPUT);
-
-  //LED screen
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
-
-  //power button, start button
-  pinMode(0, INPUT);
-  pinMode(1, INPUT);
-
-  //green, yellow, red
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(4, OUTPUT);
+  //////////LCD Stuff//////////
 }
 
-int previous_turn;
+//int previous_turn;
 
 void loop() {
   //0 turned to left, 1 turned to right
