@@ -15,40 +15,36 @@ void setup() {
 void loop() {
   
   //while (digitalRead(0) == HIGH) - POWER
+  //if (digitalRead(1) == HIGH) - START
+  //int score = 0
+  int timer = 20;
   
   while (true) {
 
-    //if (digitalRead(1) == HIGH) - START
-    
-    //int score = 0
-  
     //reset after each command
-    bool brake_success = false;
-    bool turn_success = false;
-    bool honk_success = false;
-
-    int current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
+    int current_turn = 0;
     int current_brake = 0;
+    bool honk_success = false;
+    bool turn_success = false;
+    bool brake_success = false;
+    bool correct = false;
+    
+    current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
     if ( digitalRead(5) == HIGH ) {
       current_brake = 5;
     } else if ( digitalRead(6) == HIGH ) {
       current_brake = 6;
     }
   
-    //time to perform command
-    int timer = 20;
-  
     //choose command
     //int random = rand() % 3 + 1;
     int random = 1;
   
-    //turn yellow light on
-
+    digitalWrite(3, HIGH); //turn yellow on
+  
     honk_success = honk_it(timer);
     turn_success = turn_it(timer, current_turn);
     brake_success = brake_it(timer, current_brake);
-
-    bool correct = false;
   
     switch (random) {
       case 1:
@@ -65,18 +61,19 @@ void loop() {
         break;
     }
   
-    //turn yellow light off
+    digitalWrite(3, LOW); //turn yellow off
   
-    /*if (correct == true) {
-      green light
-      tell user they succeeded
-      score++
-      timer--
+    if (correct == true) {
+      digitalWrite(2, HIGH); //turn green on
+      //tell user they succeeded
+      //score++;
+      //timer--;
     } else {
-      red light
-      tell user they failed
-    }*/
-
+      digitalWrite(4, HIGH); //turn red on
+      //tell user they failed
+      //end game
+      //report score
+    }
   }
 
   //if (score == 99) end game;
