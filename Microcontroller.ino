@@ -17,7 +17,7 @@ void loop() {
   //while (digitalRead(0) == HIGH) - POWER
   //if (digitalRead(1) == HIGH) - START
   //int score = 0
-  int timer = 2000;
+  int timer = 1000;
   
   while (true) {
 
@@ -29,17 +29,19 @@ void loop() {
     bool brake_success = false;
     bool correct = false;
     
-    //current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
+    current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
     
-    /*if ( digitalRead(5) == HIGH ) {
+    if ( digitalRead(5) == HIGH ) {
       current_brake = 5;
     } else if ( digitalRead(6) == HIGH ) {
       current_brake = 6;
-    }*/
+    } else {
+      current_brake = 5;
+    }
   
     //choose command
     //int random = rand() % 3 + 1;
-    int random = 2;
+    int random = 1;
   
     digitalWrite(3, HIGH); //turn yellow on
     delay(1000);
@@ -51,11 +53,10 @@ void loop() {
     switch (random) {
       case 1:
         if ( honk_success == true ) { correct = true; }
-        if ( turn_success == true || brake_success == true ) { correct = false; }
+        //if ( turn_success == true || brake_success == true ) { correct = false; }
         break;
       case 2:
-        //if ( turn_success == true ) { correct = true; }
-        correct = true;
+        if ( turn_success == true ) { correct = true; }
         if ( honk_success == true || brake_success == true ) { correct = false; }
         break;
       case 3:
