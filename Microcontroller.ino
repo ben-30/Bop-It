@@ -12,11 +12,9 @@ void setup() {
   //////////LCD Stuff//////////
 }
 
-//int previous_turn;
-
 void loop() {
   //0 turned to left, 1 turned to right
-  previous_turn = (digitalRead(10) == HIGH ? 1 : 0);
+  //previous_turn = (digitalRead(10) == HIGH ? 1 : 0);
   
   //while (digitalRead(0) == HIGH) - POWER
   
@@ -41,7 +39,7 @@ void loop() {
   
     //turn yellow light on
   
-    switch (random) {
+    /*switch (random) {
       case 1:
         action_success = honk_it(timer);
         digitalWrite(2, (action_success ? HIGH : LOW));
@@ -54,7 +52,7 @@ void loop() {
         action_success = brake_it(timer);
         digitalWrite(4, (action_success ? HIGH : LOW));
         break;
-    }
+    }*/
   
     //turn yellow light off
   
@@ -76,7 +74,7 @@ void loop() {
 bool honk_it(int timer) {
   int count = 0;
   while (count<timer) {
-    if (digitalRead(9) == HIGH) 
+    if (digitalRead(8) == HIGH) 
       return true;
     delay(1);
     count++;
@@ -85,18 +83,16 @@ bool honk_it(int timer) {
   return false;
 }
 
-bool turn_it(int timer) {
+bool turn_it(int timer, int previous_turn) {
   int count = 0;
   while (count<timer) {
     switch (previous_turn) {
       case 0:
-        if (digitalRead(10) == HIGH) {
-          previous_turn = 1;
+        if (digitalRead(7) == HIGH) {
           return true;
         }
       case 1:
-        if (digitalRead(10) == LOW) {
-          previous_turn = 0;
+        if (digitalRead(7) == LOW) {
           return true;
         }
     }
@@ -108,11 +104,20 @@ bool turn_it(int timer) {
   return false;
 }
 
-bool brake_it(int timer) {
+bool brake_it(int timer, int previous_brake) {
   int count = 0;
   while (count<timer) {
-    if (digitalRead(11) == HIGH)
-      return true;
+    switch (previous_brake) {
+      case 12:
+        if (digitalRead(11) == HIGH) {
+          return true;
+        }
+      case 11:
+        if (digitalRead(12) == HIGH) {
+          return true;
+        }
+    }
+  
     delay(1);
     count++;
   }
