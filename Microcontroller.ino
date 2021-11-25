@@ -22,23 +22,13 @@ void loop() {
   while (true) {
 
     //reset after each command
-    int current_turn = 0;
-    int current_brake = 0;
     bool correct = false;
-    
-    current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
-    
-    if ( digitalRead(5) == HIGH ) {
-      current_brake = 5;
-    } else if ( digitalRead(6) == HIGH ) {
-      current_brake = 6;
-    } else {
-      current_brake = 5;
-    }
+    int current_turn = get_current_turn();
+    int current_brake = get_current_brake();
   
-    //choose command
-    //int num_command = rand() % 3 + 1;
-    int num_command = 1;
+    //choose command --> honk = 1, turn = 2, brake = 3
+    //int num_command = rand() % 3 + 1; //random
+    int num_command = 1; //manually set for testing
   
     digitalWrite(3, HIGH); //turn yellow on
 
@@ -68,15 +58,32 @@ void loop() {
   //if (score == 99) end game;
 }
 
+//potentiometer on or off
+int get_current_turn() {
+  return (digitalRead(7) == HIGH) ? 1 : 0;
+}
+
+//brake up or down
+int get_current_brake() {
+  if ( digitalRead(5) == HIGH ) {
+    return 5;
+  } else if ( digitalRead(6) == HIGH ) {
+    return 6;
+  } else {
+    return 5;
+  }
+}
+
 int command(int timer, int num_command, int previous_turn, int previous_brake) {
-  //num_command --> honk = 1, turn = 2, brake = 3
   int count = 0;
   
   while (count<timer) {
     bool did_honk = check_honk();
     bool did_turn = check_turn(previous_turn);
     bool did_brake = check_brake(previous_brake);
-    
+
+    //true if correct input for command
+    //false if incorrect input for command
     switch (num_command) {
       case 1:
         if ( did_honk == true ) { return true; }
@@ -95,6 +102,8 @@ int command(int timer, int num_command, int previous_turn, int previous_brake) {
     delay(1);
     count++;
   }
+
+  return false; //time runs out
 }
 
 bool check_honk() {
@@ -102,6 +111,7 @@ bool check_honk() {
 }
 
 bool check_turn(int previous_turn) {
+  //looking for change in turn
   switch (previous_turn) {
       case 0:
         if (digitalRead(7) == HIGH)
@@ -117,6 +127,7 @@ bool check_turn(int previous_turn) {
 }
 
 bool check_brake(int previous_brake) {
+  //looking for change in brake
   switch (previous_brake) {
     case 6:
       if (digitalRead(5) == HIGH)
