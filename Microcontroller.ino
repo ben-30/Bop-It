@@ -24,9 +24,6 @@ void loop() {
     //reset after each command
     int current_turn = 0;
     int current_brake = 0;
-    bool honk_success = false;
-    bool turn_success = false;
-    bool brake_success = false;
     bool correct = false;
     
     current_turn = ( (digitalRead(7) == HIGH) ? 1 : 0 );
@@ -40,33 +37,16 @@ void loop() {
     }
   
     //choose command
-    //int random = rand() % 3 + 1;
-    int random = 1;
+    //int num_command = rand() % 3 + 1;
+    int num_command = 1;
   
     digitalWrite(3, HIGH); //turn yellow on
-  
-    //honk_success = honk_it(timer);
-    //turn_success = turn_it(timer, current_turn);
-    //brake_success = brake_it(timer, current_brake);
-  
-    switch (random) {
-      case 1:
-        //if ( honk_success == true ) { correct = true; }
-        //if ( turn_success == true || brake_success == true ) { correct = false; }
-        break;
-      case 2:
-        //if ( turn_success == true ) { correct = true; }
-        //if ( honk_success == true || brake_success == true ) { correct = false; }
-        break;
-      case 3:
-        //if ( brake_success == true ) { correct = true; }
-        //if ( honk_success == true || turn_success == true ) { correct = false; }
-        break;
-    }
+
+    correct = command(timer, num_command, current_turn, current_brake);
   
     digitalWrite(3, LOW); //turn yellow off
   
-    if (correct == true) {
+    if (correct) {
       digitalWrite(2, HIGH); //turn green on
       delay(1000);
       //tell user they succeeded
@@ -88,21 +68,41 @@ void loop() {
   //if (score == 99) end game;
 }
 
-bool honk_it(int timer) {
+int command(int timer, int num_command, int previous_turn, int previous_brake) {
+  //num_command --> honk = 1, turn = 2, brake = 3
   int count = 0;
+  
   while (count<timer) {
-    if (digitalRead(8) == HIGH) 
-      return true;
+    bool did_honk = check_honk();
+    bool did_turn = check_turn(previous_turn);
+    bool did_brake = check_brake(previous_brake);
+    
+    switch (num_command) {
+      case 1:
+        if ( did_honk == true ) { return true; }
+        if ( did_turn == true || did_brake == true ) { return false; }
+        break;
+      case 2:
+        if ( did_turn == true ) { return true; }
+        if ( did_honk == true || did_brake == true ) { return false; }
+        break;
+      case 3:
+        if ( did_brake == true ) { return true; }
+        if ( did_honk == true || did_turn == true ) { return false; }
+        break;
+    }
+    
     delay(1);
     count++;
   }
-  return false;
 }
 
-bool turn_it(int timer, int previous_turn) {
-  int count = 0;
-  while (count<timer) {
-    switch (previous_turn) {
+bool check_honk() {
+  return digitalRead(8) == HIGH ? true : false;
+}
+
+bool check_turn(int previous_turn) {
+  switch (previous_turn) {
       case 0:
         if (digitalRead(7) == HIGH)
           return true;
@@ -111,30 +111,22 @@ bool turn_it(int timer, int previous_turn) {
         if (digitalRead(7) == LOW)
           return true;
         break;
-    }
-  
-    delay(1);
-    count++;
-  }
-  return false;
+   }
+
+   return false;
 }
 
-bool brake_it(int timer, int previous_brake) {
-  int count = 0;
-  while (count<timer) {
-    switch (previous_brake) {
-      case 6:
-        if (digitalRead(5) == HIGH)
-          return true;
-        break;
-      case 5:
-        if (digitalRead(6) == HIGH)
-          return true;
-        break;
-    }
-  
-    delay(1);
-    count++;
+bool check_brake(int previous_brake) {
+  switch (previous_brake) {
+    case 6:
+      if (digitalRead(5) == HIGH)
+        return true;
+      break;
+    case 5:
+      if (digitalRead(6) == HIGH)
+        return true;
+      break;
   }
+
   return false;
 }
