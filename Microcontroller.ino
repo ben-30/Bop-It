@@ -17,7 +17,7 @@ void loop() {
   //while (digitalRead(0) == HIGH) - POWER
   //if (digitalRead(1) == HIGH) - START
   //int score = 0
-  int timer = 1000;
+  int timer = 2500;
   
   while (true) {
 
@@ -44,45 +44,45 @@ void loop() {
     int random = 1;
   
     digitalWrite(3, HIGH); //turn yellow on
-    delay(1000);
   
-    honk_success = honk_it(timer);
-    turn_success = turn_it(timer, current_turn);
-    brake_success = brake_it(timer, current_brake);
+    //honk_success = honk_it(timer);
+    //turn_success = turn_it(timer, current_turn);
+    //brake_success = brake_it(timer, current_brake);
   
     switch (random) {
       case 1:
-        if ( honk_success == true ) { correct = true; }
+        //if ( honk_success == true ) { correct = true; }
         //if ( turn_success == true || brake_success == true ) { correct = false; }
         break;
       case 2:
-        if ( turn_success == true ) { correct = true; }
-        if ( honk_success == true || brake_success == true ) { correct = false; }
+        //if ( turn_success == true ) { correct = true; }
+        //if ( honk_success == true || brake_success == true ) { correct = false; }
         break;
       case 3:
-        if ( brake_success == true ) { correct = true; }
-        if ( honk_success == true || turn_success == true ) { correct = false; }
+        //if ( brake_success == true ) { correct = true; }
+        //if ( honk_success == true || turn_success == true ) { correct = false; }
         break;
-    }
-  
-    if (correct == true) {
-      digitalWrite(2, HIGH); //turn green on
-      //tell user they succeeded
-      //score++;
-      //timer--;
-      delay(1000);
-    } else {
-      digitalWrite(4, HIGH); //turn red on
-      //tell user they failed
-      //end game
-      //report score
-      delay(1000);
     }
   
     digitalWrite(3, LOW); //turn yellow off
-    digitalWrite(2, LOW);
-    digitalWrite(4, LOW);
-    delay(1000);
+  
+    if (correct == true) {
+      digitalWrite(2, HIGH); //turn green on
+      delay(1000);
+      //tell user they succeeded
+      //score++;
+      //timer--;
+      digitalWrite(2, LOW); //turn green off
+      delay(1000);
+    } else {
+      digitalWrite(4, HIGH); //turn red on
+      delay(1000);
+      //tell user they failed
+      //end game
+      //report score
+      digitalWrite(4, LOW); //turn red off
+      delay(1000);
+    }
   }
 
   //if (score == 99) end game;
@@ -96,7 +96,6 @@ bool honk_it(int timer) {
     delay(1);
     count++;
   }
-
   return false;
 }
 
@@ -105,19 +104,18 @@ bool turn_it(int timer, int previous_turn) {
   while (count<timer) {
     switch (previous_turn) {
       case 0:
-        if (digitalRead(7) == HIGH) {
+        if (digitalRead(7) == HIGH)
           return true;
-        }
+        break;
       case 1:
-        if (digitalRead(7) == LOW) {
+        if (digitalRead(7) == LOW)
           return true;
-        }
+        break;
     }
   
     delay(1);
     count++;
   }
-
   return false;
 }
 
@@ -126,18 +124,17 @@ bool brake_it(int timer, int previous_brake) {
   while (count<timer) {
     switch (previous_brake) {
       case 6:
-        if (digitalRead(5) == HIGH) {
+        if (digitalRead(5) == HIGH)
           return true;
-        }
+        break;
       case 5:
-        if (digitalRead(6) == HIGH) {
+        if (digitalRead(6) == HIGH)
           return true;
-        }
+        break;
     }
   
     delay(1);
     count++;
   }
-
   return false;
 }
