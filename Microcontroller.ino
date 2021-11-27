@@ -97,6 +97,9 @@ void loop() {
       score++;
       timer -= 50;
 
+      //wins game after 99 successful commands
+      if (score == 99) { game_won(); }
+
       //turn green off
       digitalWrite(2, LOW);
       delay(1000);
@@ -240,4 +243,14 @@ bool check_brake(int previous_brake) {
   }
 
   return false;
+}
+
+//stays in function once game is won
+void game_won() {
+  while (true) {
+    //check for start game button press
+    delay(1);
+  }
+
+  return;
 }
