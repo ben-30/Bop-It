@@ -44,6 +44,8 @@ void loop() {
   
   //TODO: while (digitalRead(0) == HIGH) - POWER
   //TODO: if (digitalRead(1) == HIGH) - START
+
+  if (digitalRead(1) == HIGH) { start_game(); }
   int timer = 5000;
   int score = 0;
   
@@ -80,61 +82,19 @@ void loop() {
     display.clearDisplay();
 
     if (correct) {
-      //turn green on
-      digitalWrite(2, HIGH);
-      
-      //display success
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0,0);
-      display.println("Nice Job!");
-      display.setTextColor(BLACK, WHITE); // 'inverted' text
-      display.display();
-      delay(2000);
-      display.clearDisplay();
-
-      //increment score, decrement time
-      score++;
-      timer -= 50;
-
-      //wins game after 99 successful commands
+      game_advance();
+      display_score();
       if (score == 99) { game_won(); }
-
-      //turn green off
-      digitalWrite(2, LOW);
-      delay(1000);
     } else {
-      //turn red on
-      digitalWrite(4, HIGH);
-      
-      //display fail
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0,0);
-      display.println("You Lose!");
-      display.setTextColor(BLACK, WHITE); // 'inverted' text
-      display.display();
-      delay(2000);
-      display.clearDisplay();
-
-      //display final score
-      display.println("Score:");
-      display.display();
-      delay(2000);
-      display.clearDisplay();
-      display.write(score);
-      delay(2000);
-      display.clearDisplay();
-
-      //turn red off
-      digitalWrite(4, LOW); 
-      
-      //TODO: end game
-      delay(1000);
+      game_lost();
     }
   }
 
   //TODO: if (score == 99) end game;
+}
+
+void start_game() {
+  
 }
 
 //check if potentiometer is high or low
@@ -245,8 +205,70 @@ bool check_brake(int previous_brake) {
   return false;
 }
 
+//display current score
+void display_score() {
+  display.println("Score:");
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+  display.write(score);
+  delay(2000);
+  display.clearDisplay(); 
+}
+
+//advance game state
+void game_advance() {
+  //turn green on
+  digitalWrite(2, HIGH);
+  
+  //display success
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println("Nice Job!");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+
+  //increment score, decrement time
+  score++;
+  timer -= 50;
+
+  //turn green off
+  digitalWrite(2, LOW);
+  delay(1000);
+
+  return;
+}
+
 //stays in function once game is won
 void game_won() {
+  while (true) {
+    //check for start game button press
+    delay(1);
+  }
+
+  return;
+}
+
+//stays in function once game is lost
+void game_lost() {
+  //turn red on
+  digitalWrite(4, HIGH);
+  
+  //display fail
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println("You Lose!");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+
+  display_score();
+  
   while (true) {
     //check for start game button press
     delay(1);
