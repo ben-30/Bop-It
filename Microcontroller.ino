@@ -21,7 +21,6 @@ Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 void setup() {
   //pin mapping
   pinMode(0, INPUT);  //power
-  pinMode(1, INPUT);  //start
   pinMode(2, OUTPUT); //green
   pinMode(3, OUTPUT); //yellow
   pinMode(4, OUTPUT); //red
@@ -44,10 +43,8 @@ void loop() {
   
   int timer = 5000;
   int score = 0;
-  bool new_game = false;
   
-  while (new_game = false) {
-
+  while (1) {
     //reset after each command
     bool correct = false;
     int current_turn = get_current_turn();
@@ -78,7 +75,7 @@ void loop() {
     //clear display
     display.clearDisplay();
 
-    if (correct) {
+    if (correct&&score<100){ //If continue to next level
       //turn green on
       digitalWrite(2, HIGH);
       
@@ -99,7 +96,49 @@ void loop() {
       //turn green off
       digitalWrite(2, LOW);
       delay(1000);
-    } else {
+    } else if (correct&&score>=100) { //If player won game
+      //turn lights all on
+      digitalWrite(2, HIGH);
+      digitalWrite(3, HIGH);
+      digitalWrite(4, HIGH);
+      
+      //display fail
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println("YOU WIN!");
+      display.setTextColor(BLACK, WHITE); // 'inverted' text
+      display.display();
+      delay(2000);
+      display.clearDisplay();
+
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println("Score:");
+      display.setTextColor(BLACK, WHITE); // 'inverted' text
+      display.display();
+      delay(2000);
+      display.clearDisplay();
+      
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println(score);
+      display.setTextColor(BLACK, WHITE); // 'inverted' text
+      display.display();
+      delay(2000);
+      display.clearDisplay();
+
+      //turn lights off
+      digitalWrite(2, LOW); 
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      
+      score=0;
+      timer = 5000;
+      delay(1000);
+    } else{ //If player lost game
       //turn red on
       digitalWrite(4, HIGH);
       
@@ -113,44 +152,30 @@ void loop() {
       delay(2000);
       display.clearDisplay();
 
-      //display final score
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
       display.println("Score:");
+      display.setTextColor(BLACK, WHITE); // 'inverted' text
       display.display();
       delay(2000);
       display.clearDisplay();
-      display.write(score);
+      
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0,0);
+      display.println(score);
+      display.setTextColor(BLACK, WHITE); // 'inverted' text
+      display.display();
       delay(2000);
       display.clearDisplay();
 
       //turn red off
       digitalWrite(4, LOW); 
       
+      score=0;
+      timer = 5000;
       delay(1000);
-      new_game = true;
-    }
-
-    if (score == 99) {
-        //display win
-        display.setTextSize(2);
-        display.setTextColor(WHITE);
-        display.setCursor(0,0);
-        display.println("You Win!");
-        display.setTextColor(BLACK, WHITE); // 'inverted' text
-        display.display();
-        delay(2000);
-        display.clearDisplay();
-  
-        //display final score
-        display.println("Score:");
-        display.display();
-        delay(2000);
-        display.clearDisplay();
-        display.write(score);
-        delay(2000);
-        display.clearDisplay();
-  
-        delay(1000);
-        new_game = true;
     }
   }
 }
@@ -173,7 +198,7 @@ int get_current_brake() {
 
 //get string to display for command
 String get_string(int num_command) {
-    string return_string = "";
+    String return_string = "";
     
     switch (num_command) {
       case 1:
