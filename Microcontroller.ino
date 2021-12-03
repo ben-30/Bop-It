@@ -42,12 +42,11 @@ void setup() {
 
 void loop() {
   
-  //TODO: while (digitalRead(0) == HIGH) - POWER
-  //TODO: if (digitalRead(1) == HIGH) - START
   int timer = 5000;
   int score = 0;
+  bool new_game = false;
   
-  while (true) {
+  while (new_game = false) {
 
     //reset after each command
     bool correct = false;
@@ -126,12 +125,34 @@ void loop() {
       //turn red off
       digitalWrite(4, LOW); 
       
-      //TODO: end game
       delay(1000);
+      new_game = true;
+    }
+
+    if (score == 99) {
+        //display win
+        display.setTextSize(2);
+        display.setTextColor(WHITE);
+        display.setCursor(0,0);
+        display.println("You Win!");
+        display.setTextColor(BLACK, WHITE); // 'inverted' text
+        display.display();
+        delay(2000);
+        display.clearDisplay();
+  
+        //display final score
+        display.println("Score:");
+        display.display();
+        delay(2000);
+        display.clearDisplay();
+        display.write(score);
+        delay(2000);
+        display.clearDisplay();
+  
+        delay(1000);
+        new_game = true;
     }
   }
-
-  //TODO: if (score == 99) end game;
 }
 
 //check if potentiometer is high or low
